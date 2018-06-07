@@ -1,5 +1,12 @@
 package testownik;
 
+/*
+ * Testownik PWr
+ * Copyright © 2018, Krzysztof Wojciechowski.
+ * All rights reserved.
+ * License: MIT
+ */
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;

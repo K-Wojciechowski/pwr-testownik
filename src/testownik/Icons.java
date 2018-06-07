@@ -1,5 +1,12 @@
 package testownik;
 
+/*
+ * Testownik PWr
+ * Copyright © 2018, Krzysztof Wojciechowski.
+ * All rights reserved.
+ * License: MIT
+ */
+
 import javax.swing.*;
 
 class Icons {
