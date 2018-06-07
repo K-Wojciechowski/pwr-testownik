@@ -38,7 +38,6 @@ public class Testownik {
     private JScrollPane imageContainer;
     private JLabel imageLabel;
     private JPanel answerPanel;
-    private JLabel dbSize;
     private JLabel questionSeqLabel;
     private JLabel correctLabel;
     private JLabel incorrectLabel;
@@ -389,7 +388,7 @@ public class Testownik {
             reloadDatabase();
             showStartScreen();
         });
-        dbSize = new JLabel(String.format("%d pytań w bazie", questions.size()));
+        JLabel dbSize = new JLabel(String.format("%d pytań w bazie", questions.size()));
         answerPanel.add(changeDatabaseButton);
         answerPanel.add(dbSize);
 
@@ -496,10 +495,12 @@ public class Testownik {
             case START_TEXT:
                 startGame();
                 break;
-            default:
+            case CHECK_TEXT:
                 checkAnswers();
                 mainButton.requestFocus();
                 break;
+            default:
+                showError("Main button has unknown action");
         }
     }
 
