@@ -1,0 +1,5 @@
+QQ100;img=142_143.jpg;noshuffle
+143.	Co należy wpisać w miejscu oznaczonym na CZERWONO w schemacie?
+	(a) A:=A+M
+	(b) A:=A-M
+	(c) A:=M-A

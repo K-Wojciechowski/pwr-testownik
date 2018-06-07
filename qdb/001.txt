@@ -1,0 +1,6 @@
+QQ1000
+1.	Operacje na stosie:
+	(a) pop i push
+	(b) push
+	(c) press
+	(d) palenie wiedźmy

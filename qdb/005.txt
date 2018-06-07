@@ -1,0 +1,5 @@
+QQ001
+5.	Za co jest odpowiedzialny licznik programu:
+	(a) Pobieraniu rozkazu
+	(b) Wykonywanie rozkazu
+	(c) Zawiera adres następnego rozkazu, który ma być pobrany z pamięci.

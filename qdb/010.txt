@@ -1,0 +1,7 @@
+QQ10100
+10.	Czym charakteryzuje się kradzież cyklu:
+	(a) Spowolnienie działania CPU
+	(b) Spowolnieniem działania pamięci głównej
+	(c) Nie tak znaczne, jak w przypadku obsługi transferu przez CPU
+	(d) Przyspieszenie działania CPU
+	(e) Bardziej znacznie, jak w przypadku obsługi transferu przez CPU

@@ -1,0 +1,5 @@
+QQ100
+3.	Co ma wpływ na wydajność systemu:
+	(a) Szyna danych
+	(b) Szyna adresowa
+	(c) Pamięć RAM

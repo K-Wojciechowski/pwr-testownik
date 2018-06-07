@@ -1,0 +1,7 @@
+QQ10000;img=154.jpg
+154.	Jaki sposób usprawniania obliczeń przedstawia schemat?
+	(a) EPIC
+	(b) Multicore
+	(c) Superscalar
+	(d) Simultaneous multithreading
+	(e) Przetwarzanie potokowe

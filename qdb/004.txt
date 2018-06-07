@@ -1,0 +1,6 @@
+QQ1000
+4.	3 główne koncepcje systemu von Neumanna:
+	(a) procesor, pamięć komputera, urządzenia wejścia-wyjścia
+	(b) procesor, chłodzenie, Floppy Disk
+	(c) procesor, chłodzenie, Pamięć RAM
+	(d) procesor, pamięć komputera, magistrala
