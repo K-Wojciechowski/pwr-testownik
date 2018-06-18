@@ -14,7 +14,7 @@ odpowiedź (wybór wielokrotny) lub przechodzi do kolejnego pytania.
 Edytowanie bazy
 ---------------
 
-Baza to pliki tekstowe, kodowanie UTF-8 bez BOM.
+Baza to pliki tekstowe, kodowanie UTF-8 *bez BOM*, zakończenia linii LF (\n, Uniksowe). Notatnik się nie nadaje.
 
 Pierwsza linia: znaki `QQ`, potem liczby `1`/`0` (prawda/fałsz). Ewentualne opcje po średniku (np. `img=123.png` albo `noshuffle`)  
 Druga linia: treść pytania. Numer oddzielony kropką i tabulatorem.  
