@@ -2,7 +2,7 @@ package testownik;
 
 /*
  * Testownik PWr
- * Copyright © 2018, Krzysztof Wojciechowski.
+ * Copyright © 2018-2019, Krzysztof Wojciechowski.
  * All rights reserved.
  * License: MIT
  */
@@ -244,7 +244,8 @@ public class Testownik {
             for (Path file : files) {
                 try {
                     List<String> lines = Files.readAllLines(file, java.nio.charset.Charset.forName("UTF-8"));
-                    Question q = new Question(lines, dbPath);
+                    List<String> filteredLines = lines.stream().filter(l -> !l.trim().isEmpty()).collect(Collectors.toList());
+                    Question q = new Question(filteredLines, dbPath);
                     questions.add(q);
                 } catch (Exception e) {
                     throw new Exception(String.format("Error while reading %s: %s", file, e), e);
@@ -476,9 +477,9 @@ public class Testownik {
 
     private void showTestownikCopyright() {
         final JLabel copyright0 = makeBoldLabel("Informacje o testowniku:");
-        final JLabel copyright1 = new JLabel("Autor testownika (v4): Krzysztof Wojciechowski");
+        final JLabel copyright1 = new JLabel("Autor testownika (v5): Krzysztof Wojciechowski");
         final JLabel copyright2 = new JLabel("Licencja testownika: MIT. Wykorzystano klasę StretchIcon autorstwa Darryla Burke.");
-        final JLabel copyright3 = new JLabel("Kod źródłowy: https://bitbucket.org/k_wojciechowski/pwr_testownik");
+        final JLabel copyright3 = new JLabel("Kod źródłowy: https://github.com/K-Wojciechowski/pwr-testownik");
 
         answerPanel.add(copyright0);
         answerPanel.add(copyright1);

@@ -2,7 +2,7 @@ package testownik;
 
 /*
  * Testownik PWr
- * Copyright © 2018, Krzysztof Wojciechowski.
+ * Copyright © 2018-2019, Krzysztof Wojciechowski.
  * All rights reserved.
  * License: MIT
  */

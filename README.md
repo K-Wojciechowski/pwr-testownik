@@ -1,7 +1,7 @@
 Testownik PWr
 =============
 
-Licencja: MIT
+Licencja: MIT  
 Wykorzystano klasę StretchIcon autorstwa Darryla Burke
 
 Gra z klawiatury
