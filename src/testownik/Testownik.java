@@ -2,7 +2,7 @@ package testownik;
 
 /*
  * Testownik PWr
- * Copyright © 2018-2019, Krzysztof Wojciechowski.
+ * Copyright © 2018-2020, Krzysztof Wojciechowski.
  * All rights reserved.
  * License: MIT
  */
@@ -59,6 +59,8 @@ public class Testownik {
     private List<String> splash = Collections.emptyList();
     private JCheckBox shuffleQuestions;
     private JCheckBox shuffleAnswers;
+    private JCheckBox alwaysShowCheckboxesInput;
+    private boolean alwaysShowCheckboxes = false;
 
 
     public Testownik(JFrame frame) {
@@ -279,6 +281,7 @@ public class Testownik {
         } else {
             this.questionsToAsk.sort(Comparator.comparing(Question::getNumber));
         }
+        this.alwaysShowCheckboxes = this.alwaysShowCheckboxesInput.isSelected();
         questionsCorrect.clear();
         questionsIncorrect.clear();
         questionIndex = -1;
@@ -323,7 +326,7 @@ public class Testownik {
 
         final JLabel prompt = new JLabel();
         setFontSize(prompt, 9);
-        if (currentQuestion.hasMultipleCorrectAnswers()) {
+        if (currentQuestion.hasMultipleCorrectAnswers() || alwaysShowCheckboxes) {
             prompt.setText("Zaznacz wszystkie poprawne odpowiedzi.");
             mainButton.setText(CHECK_TEXT);
             hasCheckboxes = true;
@@ -395,8 +398,10 @@ public class Testownik {
 
         shuffleQuestions = new JCheckBox("Losowa kolejność pytań", true);
         shuffleAnswers = new JCheckBox("Losowa kolejność odpowiedzi", true);
+        alwaysShowCheckboxesInput = new JCheckBox("Zawsze pokazuj pytania jako pytania wielokrotnego wyboru", alwaysShowCheckboxes);
         answerPanel.add(shuffleQuestions);
         answerPanel.add(shuffleAnswers);
+        answerPanel.add(alwaysShowCheckboxesInput);
 
         final JLabel row0 = makeBoldLabel("Informacje o bazie:");
         answerPanel.add(row0);
@@ -442,7 +447,6 @@ public class Testownik {
         JButton incorrectButton = new JButton("Tak, zadaj mi tylko pytania z błędną odpowiedzią");
         JButton noButton = new JButton("Nie, dziękuję");
 
-
         allButton.addActionListener(e -> startGame());
         incorrectButton.addActionListener(e -> startGame(questionsIncorrect));
         noButton.addActionListener(e -> frame.dispose());
@@ -459,6 +463,9 @@ public class Testownik {
         answerPanel.add(allButton);
         answerPanel.add(incorrectButton);
         answerPanel.add(noButton);
+        answerPanel.add(shuffleQuestions);
+        answerPanel.add(shuffleAnswers);
+        answerPanel.add(alwaysShowCheckboxesInput);
 
         final JLabel row9 = makeBoldLabel("Informacje o bazie:");
         answerPanel.add(row9);
@@ -477,7 +484,7 @@ public class Testownik {
 
     private void showTestownikCopyright() {
         final JLabel copyright0 = makeBoldLabel("Informacje o testowniku:");
-        final JLabel copyright1 = new JLabel("Autor testownika (v5): Krzysztof Wojciechowski");
+        final JLabel copyright1 = new JLabel("Autor testownika (v6): Krzysztof Wojciechowski");
         final JLabel copyright2 = new JLabel("Licencja testownika: MIT. Wykorzystano klasę StretchIcon autorstwa Darryla Burke.");
         final JLabel copyright3 = new JLabel("Kod źródłowy: https://github.com/K-Wojciechowski/pwr-testownik");
 
