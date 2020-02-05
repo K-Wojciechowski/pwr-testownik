@@ -3,6 +3,7 @@ import glob
 import re
 import sys
 
+AVAILABLE_INDICATORS = ('A) ', 'a) ', '(a) ', ' - ', '- ', 'a. ')
 NO_INDICATORS = '--no-indicators' in sys.argv
 
 for fname in glob.glob("*.txt"):
@@ -18,18 +19,35 @@ for fname in glob.glob("*.txt"):
 
     fdata[0] = fdata[0].replace('X', 'QQ')
     try:
-        fdata[1] = re.sub("\\. ?", ".\t", fdata[1], 1)
+        # fdata[1] = re.sub("\\. ?", ".\t", fdata[1], 1)
+        fdata[1] = re.sub("\\. +", ".\t", fdata[1], 1)
     except IndexError:
         print(f"{fname}: WTF")
         print(fdata)
         break
-    if fdata[2].startswith(('A) ', 'a) ', ' - ')):
-        trim = 3
-    elif fdata[2].startswith('- '):
-        trim = 2
-    elif NO_INDICATORS:
+    trim = None
+    if NO_INDICATORS:
         trim = 0
-    else:
+
+    if trim is None:
+        for ind in AVAILABLE_INDICATORS:
+            if fdata[2].startswith(ind):
+                trim = len(ind)
+                break
+
+    if trim is None:
+        try:
+            for ind in AVAILABLE_INDICATORS:
+                if fdata[2].strip().startswith(ind):
+                    trim = fdata[2].index(ind)
+                    part = fdata[2][trim:]
+                    trim += part.index(part.strip())
+                    break
+        except ValueError:
+            pass
+
+
+    if trim is None:
         print(f"{fname}: unknown file format")
         break
     for i in range(2, len(fdata)):
