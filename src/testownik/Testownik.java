@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -159,6 +160,19 @@ public class Testownik {
     }
 
     public static void main(String[] args) {
+        if (args.length > 0 && args[0].equals("--verify")) {
+            Path dbPath = args.length == 2 ? Paths.get(args[1]) : findDatabase();
+            try {
+                ArrayList<Question> questions = loadQuestions(dbPath);
+                System.out.printf("Loaded %s questions, everything OK\n", questions.size());
+                System.exit(0);
+            } catch (Exception e) {
+                System.out.println(e.toString());
+                System.out.println("Loading questions FAILED");
+                System.exit(1);
+            }
+        }
+
         JFrame frame = new JFrame("Testownik");
         Testownik inst = new Testownik(frame);
         frame.setContentPane(inst.mainPanel);
@@ -194,18 +208,20 @@ public class Testownik {
         return gbc;
     }
 
-    private void firstStart() {
-        // Find database
+    private static Path findDatabase() {
         try {
             Path jarPath = Paths.get(Testownik.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             if (jarPath.toString().endsWith(".jar")) {
                 jarPath = jarPath.getParent();
             }
-            dbPath = jarPath.resolve("qdb");
+            return jarPath.resolve("qdb");
         } catch (Exception e) {
-            dbPath = null;
+            return null;
         }
+    }
 
+    private void firstStart() {
+        dbPath = findDatabase();
         reloadDatabase();
         showStartScreen();
     }
@@ -233,26 +249,31 @@ public class Testownik {
         }
     }
 
+    private static ArrayList<Question> loadQuestions(Path dbPath) throws Exception {
+        ArrayList<Question> questions = new ArrayList<>();
+        List<Path> files = Files.list(dbPath).filter(path -> path.toString().endsWith(".txt")).sorted().collect(Collectors.toList());
+        questions.ensureCapacity(files.size());
+
+        for (Path file : files) {
+            try {
+                List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
+                List<String> filteredLines = lines.stream().filter(l -> !l.trim().isEmpty()).collect(Collectors.toList());
+                Question q = new Question(filteredLines, dbPath);
+                questions.add(q);
+            } catch (Exception e) {
+                throw new Exception(String.format("Error while reading %s: %s", file, e), e);
+            }
+        }
+        return questions;
+    }
+
     private void reloadDatabase() {
         while (dbPath == null || Files.notExists(dbPath)) {
             showError("Nie znaleziono bazy danych. Wskaż folder z pytaniami (qdb).");
             getDatabasePath();
         }
         try {
-            List<Path> files = Files.list(dbPath).filter(path -> path.toString().endsWith(".txt")).sorted().collect(Collectors.toList());
-            questions = new ArrayList<>();
-            questions.ensureCapacity(files.size());
-
-            for (Path file : files) {
-                try {
-                    List<String> lines = Files.readAllLines(file, java.nio.charset.Charset.forName("UTF-8"));
-                    List<String> filteredLines = lines.stream().filter(l -> !l.trim().isEmpty()).collect(Collectors.toList());
-                    Question q = new Question(filteredLines, dbPath);
-                    questions.add(q);
-                } catch (Exception e) {
-                    throw new Exception(String.format("Error while reading %s: %s", file, e), e);
-                }
-            }
+            questions = loadQuestions(dbPath);
         } catch (Exception e) {
             showError(e.toString());
             System.exit(1);
@@ -260,7 +281,7 @@ public class Testownik {
 
         try {
             Path file = dbPath.resolve("splash.nfo");
-            splash = Files.readAllLines(file, java.nio.charset.Charset.forName("UTF-8"));
+            splash = Files.readAllLines(file, StandardCharsets.UTF_8);
         } catch (IOException e) {
             // Ignore this one.
         }
@@ -484,7 +505,7 @@ public class Testownik {
 
     private void showTestownikCopyright() {
         final JLabel copyright0 = makeBoldLabel("Informacje o testowniku:");
-        final JLabel copyright1 = new JLabel("Autor testownika (v6): Krzysztof Wojciechowski");
+        final JLabel copyright1 = new JLabel("Autor testownika (v7): Krzysztof Wojciechowski");
         final JLabel copyright2 = new JLabel("Licencja testownika: MIT. Wykorzystano klasę StretchIcon autorstwa Darryla Burke.");
         final JLabel copyright3 = new JLabel("Kod źródłowy: https://github.com/K-Wojciechowski/pwr-testownik");
 
