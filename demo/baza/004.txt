@@ -1,0 +1,5 @@
+X101
+4. W tym pliku:
+a. są ponumerowane pytania
+b. odpowiedzi mają literę w formacie (a)
+c. odpowiedzi mają literę w formacie a.

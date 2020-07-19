@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,9 +30,10 @@ import java.util.stream.Collectors;
 
 public class Testownik {
     private static final int TOGGLE_SIZE = 16;
-    private final String START_TEXT = "Start";
-    private final String NEXT_QUESTION_TEXT = "Następne pytanie";
-    private final String CHECK_TEXT = "Sprawdź";
+    private static final String START_TEXT = "Start";
+    private static final String NEXT_QUESTION_TEXT = "Następne pytanie";
+    private static final String CHECK_TEXT = "Sprawdź";
+    private static final Charset WINDOWS_1250 = Charset.forName("windows-1250");
     private JFrame frame;
     private JPanel mainPanel;
     private JTextArea questionBox;
@@ -208,16 +210,30 @@ public class Testownik {
         return gbc;
     }
 
-    private static Path findDatabase() {
+    private static Path findDatabase(String folderName) {
         try {
             Path jarPath = Paths.get(Testownik.class.getProtectionDomain().getCodeSource().getLocation().toURI());
             if (jarPath.toString().endsWith(".jar")) {
                 jarPath = jarPath.getParent();
             }
-            return jarPath.resolve("qdb");
+            return jarPath.resolve(folderName);
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /** Find the database. Supports both new and legacy databases. */
+    private static Path findDatabase() {
+        Path dbPath = findDatabase("qdb");
+
+        if (dbPath == null || Files.notExists(dbPath)) {
+            Path alternateDbPath = findDatabase("baza");
+            if (alternateDbPath != null && Files.exists(alternateDbPath)) {
+                return alternateDbPath;
+            }
+        }
+
+        return dbPath;
     }
 
     private void firstStart() {
@@ -255,10 +271,16 @@ public class Testownik {
         questions.ensureCapacity(files.size());
 
         for (Path file : files) {
+            List<String> lines;
             try {
-                List<String> lines = Files.readAllLines(file, StandardCharsets.UTF_8);
+                try {
+                    lines = Files.readAllLines(file, StandardCharsets.UTF_8);
+                } catch (Exception e) {
+                    lines = Files.readAllLines(file, WINDOWS_1250);
+                }
+
                 List<String> filteredLines = lines.stream().filter(l -> !l.trim().isEmpty()).collect(Collectors.toList());
-                Question q = new Question(filteredLines, dbPath);
+                Question q = new Question(filteredLines, file, dbPath);
                 questions.add(q);
             } catch (Exception e) {
                 throw new Exception(String.format("Error while reading %s: %s", file, e), e);
@@ -269,7 +291,7 @@ public class Testownik {
 
     private void reloadDatabase() {
         while (dbPath == null || Files.notExists(dbPath)) {
-            showError("Nie znaleziono bazy danych. Wskaż folder z pytaniami (qdb).");
+            showError("Nie znaleziono bazy danych. Wskaż folder z pytaniami (qdb lub baza).");
             getDatabasePath();
         }
         try {
@@ -281,7 +303,14 @@ public class Testownik {
 
         try {
             Path file = dbPath.resolve("splash.nfo");
-            splash = Files.readAllLines(file, StandardCharsets.UTF_8);
+            try {
+                splash = Files.readAllLines(file, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                splash = Files.readAllLines(file, WINDOWS_1250);
+            }
+            if (splash.get(0).startsWith("\uFEFF")) { // UTF-8 BOM
+                splash.set(0, splash.get(0).substring(1));
+            }
         } catch (IOException e) {
             // Ignore this one.
         }
@@ -505,7 +534,7 @@ public class Testownik {
 
     private void showTestownikCopyright() {
         final JLabel copyright0 = makeBoldLabel("Informacje o testowniku:");
-        final JLabel copyright1 = new JLabel("Autor testownika (v7): Krzysztof Wojciechowski");
+        final JLabel copyright1 = new JLabel("Autor testownika (v8): Krzysztof Wojciechowski");
         final JLabel copyright2 = new JLabel("Licencja testownika: MIT. Wykorzystano klasę StretchIcon autorstwa Darryla Burke.");
         final JLabel copyright3 = new JLabel("Kod źródłowy: https://github.com/K-Wojciechowski/pwr-testownik");
 

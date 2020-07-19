@@ -1,0 +1,5 @@
+X100
+2. W tym pliku:
+są ponumerowane pytania
+odpowiedzi mają literę w formacie (a)
+odpowiedzi mają literę w formacie a.

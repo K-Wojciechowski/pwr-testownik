@@ -1,0 +1,5 @@
+﻿X110
+3. W tym pliku:
+(a) są ponumerowane pytania
+(b) odpowiedzi mają literę w formacie (a)
+(c) odpowiedzi mają literę w formacie a.

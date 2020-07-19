@@ -1,0 +1,8 @@
+X00001
+To pytanie ma numer:
+- 1
+-2
+42
+9 3/4
+8
+

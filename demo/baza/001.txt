@@ -1,0 +1,6 @@
+X0100
+Kodowanie znaków u¿ywane przez notepad.exe to:
+UTF-8
+Windows-1250
+Windows-1252
+EBCDIC

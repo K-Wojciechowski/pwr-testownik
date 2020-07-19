@@ -1,0 +1,7 @@
+X00100
+Odpowiedzi mają oznaczenie:
+	(A)	w formacie (a)
+	(B)	w formacie a.
+	(C)	w formacie (A)
+	(D)	w formacie a)
+	(E)	w formacie -
